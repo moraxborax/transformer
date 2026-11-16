@@ -1,11 +1,11 @@
 import argparse
-import os
 from collections.abc import Iterator
 from pathlib import Path
 
 import torch
 import torch.nn.functional as F
 from datasets import Dataset, DatasetDict, concatenate_datasets, load_dataset
+from dotenv import load_dotenv
 from tokenizers import Tokenizer
 from tokenizers.models import BPE
 from tokenizers.pre_tokenizers import Whitespace
@@ -13,6 +13,8 @@ from tokenizers.trainers import BpeTrainer
 from torch.utils.tensorboard import SummaryWriter
 
 from src.model import TransformerDecoder, TransformerEncoder
+
+load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 PAD = "[PAD]"
 BOS = "[BOS]"
@@ -204,8 +206,6 @@ def save_checkpoint(
 
 
 def train(args: argparse.Namespace) -> None:
-    # The MPS allocator otherwise stops around its default watermark while the Mac still has free memory.
-    os.environ.setdefault("PYTORCH_MPS_HIGH_WATERMARK_RATIO", "0.0")
     dataset = load_wmt14()
     train_rows = dataset["train"].shuffle(seed=42)
     checkpoint_dir = Path(args.checkpoint_dir)

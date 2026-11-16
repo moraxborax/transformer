@@ -1,5 +1,4 @@
 import argparse
-import os
 from pathlib import Path
 
 import torch
@@ -7,8 +6,6 @@ from tokenizers import Tokenizer
 
 from src.model import TransformerDecoder, TransformerEncoder
 from src.train import BOS, EOS, PAD, load_wmt14
-
-os.environ.setdefault("PYTORCH_MPS_HIGH_WATERMARK_RATIO", "0.0")
 
 
 def length_penalty(length: int, alpha: float) -> float:
